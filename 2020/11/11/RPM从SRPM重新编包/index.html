@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <meta name="author" content="AhanWhite">
+  
+  
+  
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AhanWhite" type="application/atom+xml">
+  
+
+  
+
+  <title>RPM从SRPM重新编包 | AhanWhite</title>
+
+  
+
+  
+
+  
+
+
+  
+  
+  
+
+  
+    
+      <link rel="stylesheet" href="/css/style.css">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/a2396837/CDN@latest/css/socialiconfont.css">
+    
+  
+
+  
+<meta name="generator" content="Hexo 5.2.0"></head>
+</html>
+    
+<div class="nav index" style="height: 60px;">
+    <div class="title animated fadeInDown">
+        <div class="layui-container">
+                <div class="nav-title"><a href="/" title="AhanWhite">AhanWhite</a></div>
+            <div class="nav-list">
+                <button> <span class=""></span><span style="display: block;"></span><span class=""></span> </button>
+                <ul class="layui-nav" lay-filter="">
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/search/ ">
+                            <i class=" fas fa-search-plus " style="color: rgb(3 169 244);"></i>
+                            <span class="layui-nav-item-name">搜索</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/ ">
+                            <i class=" fab fa-fort-awesome " style="color: rgb(255 107 107);"></i>
+                            <span class="layui-nav-item-name">首页</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/archives/ ">
+                            <i class=" fas fa-archive " style="color: rgb(10 189 227);"></i>
+                            <span class="layui-nav-item-name">归档</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/tags/ ">
+                            <i class=" fas fa-hashtag " style="color: rgb(254 202 87);"></i>
+                            <span class="layui-nav-item-name">标签</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/categories ">
+                            <i class=" far fa-folder-open " style="color: rgb(29 209 161);"></i>
+                            <span class="layui-nav-item-name">分类</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/about/ ">
+                            <i class=" fab fa-grav " style="color: rgb(154 106 247);"></i>
+                            <span class="layui-nav-item-name">关于</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/guestbook/ ">
+                            <i class=" fab fa-telegram " style="color: hsl(205deg 100% 50%);"></i>
+                            <span class="layui-nav-item-name">留言</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/link/ ">
+                            <i class=" fab fa-weixin " style="color: hsl(152deg 73% 45%);"></i>
+                            <span class="layui-nav-item-name">友链</span>
+                        </a>
+                    </li>
+                    
+                        
+                        
+                        
+                        
+                    <li class="layui-nav-item">
+                        <a href="/shuoshuo/ ">
+                            <i class=" fas fa-coffee " style="color:#31c7c1;"></i>
+                            <span class="layui-nav-item-name">说说</span>
+                        </a>
+                    </li>
+                    
+                    
+                        <li class="layui-nav-item" id="btn-toggle-dark">🌙</li>
+                        
+                    <span class="layui-nav-bar" style="left: 342px; top: 78px; width: 0px; opacity: 0;"></span>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<header class="header">
+        
+            <div class="logo">
+                    <a href="/"><img src="https://cdn.jsdelivr.net/gh/a2396837/CDN@latest/images/2020/07/27/baokemeng.webp" onerror=this.onerror=null,this.src="/img/loading.gif"></a>
+            </div>
+         
+    </div>
+     
+    
+            <div class="social">
+                
+                        <a class="social-icon" href="https://github.com/ahanwhite" target="_blank" title="Github">
+                            <i class="iconfont icon-GitHub" aria-hidden="true"></i>
+                          </a>
+                 
+                        <a class="social-icon" href="mailto:ahanwhite@outlook.com" target="_blank" title="Email">
+                            <i class="iconfont icon-email" aria-hidden="true"></i>
+                          </a>
+                 
+            </div>
+     
+</header>
+
+    
+<article id="post">
+  <div class="post-title">RPM从SRPM重新编包</div>
+  
+<div class="post-meta">
+    
+    
+      <div class="post-meta-item date">
+        <span title="发表于 2020.11.11"><i class="far fa-calendar-alt"></i> 2020.11.11</span>
+      </div>
+      <div class="post-meta-item updated">
+        <span title="更新于 2020.11.11"><i class="far fa-calendar-check"></i> 2020.11.11</span>
+      </div>
+     
+    
+      <div class="post-meta-item categories">
+        
+          <i class="fas fa-inbox article-meta__icon"></i> <a href="/categories/Linux/">Linux</a>
+        
+      </div>
+     
+    
+     <div class="post-meta-item wordcount">
+        
+          <i class="fas fa-pencil-alt"></i> <span class="post-count">453 字</span>
+           
+        
+          <i class="far fa-clock"></i> <span class="post-count">1 分钟</span>
+                               
+      </div>
+     
+</div>
+
+
+  
+    <div id="toc" class="toc">
+          <h1>目录</h1>
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E7%9B%B8%E5%85%B3%E8%BD%AF%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">安装相关软件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E7%9B%AE%E5%BD%95"><span class="toc-number">2.</span> <span class="toc-text">初始化目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">目录结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2RPM%E5%8C%85"><span class="toc-number">4.</span> <span class="toc-text">查询RPM包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E4%BA%8C%E8%BF%9B%E5%88%B6RPM%E5%8C%85"><span class="toc-number">5.</span> <span class="toc-text">构建二进制RPM包</span></a></li></ol>
+      </div>
+    
+  <div class="content">
+        <div><p>目前仅用到从SRPM中编译所需要架构的RPM包，仅记录此方案。</p>
+<p>在工作中对新架构进行适配时，发现缺少相关的RPM包，需要手动编译，相对快捷的办法是从SRPM包重新编译。</p>
+<a id="more"></a>
+
+<blockquote>
+<p>RPM 文件有两类：源 RPM（SRPM）和二进制 RPM。</p>
+<p>SRPM 中的有效负载是 SPEC 文件（描述如何构建二进制 RPM）。</p>
+<p>SPEC 文件是 rpmbuild 程序用于实际构建 RPM 的方法。</p>
+</blockquote>
+<h1 id="安装相关软件"><a href="#安装相关软件" class="headerlink" title="安装相关软件"></a>安装相关软件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install rpmbuild rpmdevtools -y</span><br></pre></td></tr></table></figure>
+
+<h1 id="初始化目录"><a href="#初始化目录" class="headerlink" title="初始化目录"></a>初始化目录</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpmdev-setuptree</span><br></pre></td></tr></table></figure>
+
+<h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BUILD</td>
+<td>构建 RPM 包的时，会在此目录下产生各种%buildroot 目录。如果构建失败，可以据此查看目录日志，进行问题诊断</td>
+</tr>
+<tr>
+<td>RPMS</td>
+<td>构建成功二进制 RPM 的存放目录。存放在 architecture 的子目录中。例如：noarch 和 x86_64</td>
+</tr>
+<tr>
+<td>SOURCES</td>
+<td>存放源代码和补丁的目录。构建 RPM 包时，rpmbuild 命令将会从这个目录查找源代码</td>
+</tr>
+<tr>
+<td>SPECS</td>
+<td>SPEC文件存放目录</td>
+</tr>
+<tr>
+<td>SRPMS</td>
+<td>存放 SRPM 的目录</td>
+</tr>
+</tbody></table>
+<h1 id="查询RPM包"><a href="#查询RPM包" class="headerlink" title="查询RPM包"></a>查询RPM包</h1><p>在以下网站可以查到绝大部分的包，能够溯源到其相关的源码包。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://koji.fedoraproject.org/koji/search">https://koji.fedoraproject.org/koji/search</a></p>
+<p><a target="_blank" rel="noopener" href="http://rpmfind.net/linux/RPM/">http://rpmfind.net/linux/RPM/</a></p>
+<p><a target="_blank" rel="noopener" href="http://ftp.redhat.com/pub/redhat/linux/enterprise/7Server/en/RHCEPH/SRPMS/">http://ftp.redhat.com/pub/redhat/linux/enterprise/7Server/en/RHCEPH/SRPMS/</a></p>
+<p><a target="_blank" rel="noopener" href="http://ftp.jaist.ac.jp/pub/Linux/Fedora/development/rawhide/Everything/source/tree/Packages/g/">http://ftp.jaist.ac.jp/pub/Linux/Fedora/development/rawhide/Everything/source/tree/Packages/g/</a></p>
+</blockquote>
+<p>下载SRPM包到架构的机子上，安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh ***.src.rpm</span><br></pre></td></tr></table></figure>
+
+<p>执行完成后，会在 SPEC 目录中生成这个包的 SPEC 文件。</p>
+<h1 id="构建二进制RPM包"><a href="#构建二进制RPM包" class="headerlink" title="构建二进制RPM包"></a>构建二进制RPM包</h1><p>在构建二进制 RPM 包时，习惯采用从源码构建 SRPM，然后再构建二进制 RPM 的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpmbuild -ba xxx.spec</span><br></pre></td></tr></table></figure>
+
+<p>根据报错提示，安装所需求的软件或者处理其他发生的问题，完成编包。</p>
+<p>参考：</p>
+<ol>
+<li> <a target="_blank" rel="noopener" href="https://developer.ibm.com/zh/technologies/linux/articles/l-lo-rpm-build-package/">https://developer.ibm.com/zh/technologies/linux/articles/l-lo-rpm-build-package/</a></li>
+</ol>
+</div>
+        
+          <div class="post-copyright">
+                  <div class="copyright-item">
+                      <span> 作者: AhanWhite</span>
+                  </div>
+                  <div class="copyright-item">
+                      <span> 链接: <a href="http://www.ahanwhite.com/2020/11/11/RPM%E4%BB%8ESRPM%E9%87%8D%E6%96%B0%E7%BC%96%E5%8C%85/">http://www.ahanwhite.com/2020/11/11/RPM%E4%BB%8ESRPM%E9%87%8D%E6%96%B0%E7%BC%96%E5%8C%85/</a></span>
+                  </div>
+                  <div class="copyright-item">
+                      <span> 声明: 本博客所有文章除特别声明外，均采用许可协议 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> 转载请注明出处！</span>
+                  </div>
+          </div>
+        
+  </div>
+
+  <div class="share-reward">
+    <div class="share">
+        
+<div class="social-share" data-sites="facebook,twitter,wechat,weibo,qq"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script>
+
+
+      </div>
+        <div class="reward">
+          
+  <div style="padding: 10px 0; margin-left: 20px; width: 90%; text-align: center;">
+    <div class="reward-content">
+        <ul id="donateBox" class="list pos-a">
+          
+           <li id="PayPal"><a href="https://paypal.me" target="_blank" title="贝宝">贝宝</a></li>
+            
+          
+            <li id="AliPay" title="支付宝"><img data-img="/img/alipay.jpg" onerror=this.onerror=null,this.src="/img/loading.gif"></img></li>
+               
+                 
+            <li id="WeChat" title="微信"><img date-img="/img/wechat.jpg" onerror=this.onerror=null,this.src="/img/loading.gif"></img></li>
+                      
+          </ul>
+        <div id="QRBox" class="pos-f left-100">
+          <div id="MainBox"></div>
+        </div>
+    </div>
+  </div>
+  
+        </div>
+    </div>
+    
+    <div class="post_tags">
+      
+        <i class="fas fa-tag"></i> <a href="/tags/rpm/" class="tag">rpm</a>
+      
+    </div>
+    <div class="post-nav">
+      
+      
+        <div class="post-nav-next post-nav-item">
+            <a href="/2020/11/11/Node-js-%E5%AE%89%E8%A3%85/" >Node.js 安装<i class="fa fa-chevron-right"></i></a>
+        </div>
+      
+    </div>
+      
+</article>
+
+    
+<a id="gotop" href="javascript:" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    
+
+
+
+
+
+
+    
+<div id="bottom-outer">
+    <div id="bottom-inner">
+        © 2020 <i class="fa fa-heart" id="heart"></i> AhanWhite 
+        <br>
+        Powered by 
+        <a target="_blank" rel="noopener" href="http://hexo.io">hexo</a> | Theme is <a target="_blank" rel="noopener" href="https://github.com/a2396837/hexo-theme-blank/">blank</a>
+        
+          <div class="icp-info">
+            
+          <a href="" target="_blank"> </a>
+        </div>
+        
+    </div>  
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/layui-src@2.5.5/dist/layui.min.js"></script>
+
+
+
+  
+    <script src="/js/script.js"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
+  
+
+ 
+
+  <script src="/js/local-search.js"></script>
+<script type="text/javascript">      
+  var search_path = "search.xml";
+if (search_path.length == 0) {
+  search_path = "search.xml";
+}
+var path = "/" + search_path;
+  searchFunc(path, 'local-search-input', 'local-search-result');
+</script>
+  
+
+
+  <script>
+    window.lazyLoadOptions = {
+      elements_selector: 'img',
+      threshold: 0
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script>   
+  
+
+
+  <script>
+    var images = $('img').not('.nav-logo img').not('.card img').not($('a>img')).not('.reward-content img')
+    images.each(function (i, o) {
+      var lazyloadSrc = $(o).attr('data-src') ? $(o).attr('data-src') : $(o).attr('src')
+      $(o).wrap(`<a href="${lazyloadSrc}" data-fancybox="group" data-caption="${$(o).attr('alt')}" class="fancybox"></a>`)
+    })
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script>
+  <script>
+        $().fancybox({
+      selector: '[data-fancybox]',
+      loop: true,
+      transitionEffect: 'slide',
+      protect: true,
+      buttons: ['slideShow', 'fullScreen', 'thumbs', 'close']
+    })
+  </script>   
+  
+
+
+  <script>
+  if (!window.MathJax) {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]],
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+              const display = !!node.type.match(/; *mode=display/)
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+              const text = document.createTextNode('')
+              node.parentNode.replaceChild(text, node)
+              math.start = {node: text, delim: '', n: 0}
+              math.end = {node: text, delim: '', n: 0}
+              doc.math.push(math)
+            }
+          }, '']
+        }
+      }
+    }
+    
+    var script = document.createElement('script')
+    script.src = "https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"
+    script.id = 'MathJax-script'
+    script.async = true
+    document.head.appendChild(script)
+  } else {
+    MathJax.startup.document.state(0)
+    MathJax.texReset()
+    MathJax.typeset()
+  }
+  </script>
+  
+
+
+  
+<script>
+if (document.getElementsByClassName('mermaid').length) {
+    if (window.mermaidJsLoad) mermaid.init()
+    else {
+      $.getScript("https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js", function () {
+        window.mermaidJsLoad = true
+        mermaid.initialize({
+          theme: "default",
+        })
+      })
+    }
+  }
+  </script>
+  
+
+
+  <script>
+    jQuery(document).ready(function () {
+      var QRBox = $('#QRBox');
+      var MainBox = $('#MainBox');
+      var AliPayQR = '/img/alipay.jpg';
+      var WeChanQR = '/img/wechat.jpg';
+
+      function showQR(QR) {
+        if (QR) {
+          MainBox.css('background-image', 'url(' + QR + ')');
+        }
+        $('#donateBox').addClass('blur');
+        QRBox.fadeIn(300, function (argument) {
+          MainBox.addClass('showQR');
+        });
+      }
+
+      $('#donateBox>li').click(function (event) {
+        var thisID = $(this).attr('id');
+        if (thisID === 'AliPay') {
+          showQR(AliPayQR);
+        } else if (thisID === 'WeChat') {
+          showQR(WeChanQR);
+        }
+      });
+
+      MainBox.click(function (event) {
+        MainBox.removeClass('showQR').addClass('hideQR');
+        setTimeout(function (a) {
+          QRBox.fadeOut(300, function (argument) {
+            MainBox.removeClass('hideQR');
+          });
+          $('#DonateText,#donateBox,#github').removeClass('blur');
+        }, 600);
+
+      });
+    });
+  </script>
+  
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js"></script>
+<script>
+!function (e, t, a) {
+  var initCopyCode = function(){
+    var copyHtml = '';
+    copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+    copyHtml += '  <i class="fa fa-clipboard"></i><span>复制</span>';
+    copyHtml += '</button>';
+    $(".highlight .code pre").before(copyHtml);
+    new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+  }
+  initCopyCode();
+}(window, document);
+</script>
+  
+
+
+  <script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script>
+  
+
+
+  <script src="https://cdn.jsdelivr.net/gh/a2396837/CDN@latest/js/firework.js"></script>
+  
+
+
+  <script src="/js/todark.js"></script>
+  
+
+<script>
+  var btntop = $('#gotop');
+  btntop.on('click', function (e) {
+    e.preventDefault();
+    $('html, body').animate({ scrollTop: 0 }, '300');
+  });
+
+  var $table = $('.content table').not($('figure.highlight > table'))
+$table.each(function () {
+  $(this).wrap('<div class="table-wrap"></div>')
+})
+</script>
+
+
+
+</html>
